@@ -25,6 +25,7 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @required
      */
     protected File outputDirectory;
+    
     /**
      * Name of the generated Mule App.
      *
