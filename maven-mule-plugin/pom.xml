@@ -49,31 +49,18 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-<!--            <version>4.8.1</version>-->
-            <version>3.8.2</version>
+            <version>4.8.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.maven.plugin-testing</groupId>-->
-<!--            <artifactId>maven-plugin-testing-tools</artifactId>-->
-<!--            <version>1.2</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.maven.plugin-testing</groupId>-->
-<!--            <artifactId>maven-plugin-testing-harness</artifactId>-->
-<!--            <version>1.2</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
+            <groupId>org.apache.maven.plugin-testing</groupId>
             <artifactId>maven-plugin-testing-tools</artifactId>
-            <version>1.0-alpha-3</version>
+            <version>1.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
+            <groupId>org.apache.maven.plugin-testing</groupId>
             <artifactId>maven-plugin-testing-harness</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -118,6 +105,7 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/src/test/it-resources</directory>
+                                    <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
