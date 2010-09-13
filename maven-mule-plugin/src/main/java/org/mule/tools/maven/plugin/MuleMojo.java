@@ -31,7 +31,6 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
  */
 public class MuleMojo extends AbstractMuleMojo
 {
-
     /**
      * The Maven project.
      *
@@ -40,7 +39,6 @@ public class MuleMojo extends AbstractMuleMojo
      * @readonly
      */
     private MavenProject project;
-
 
     /**
      * @component
@@ -101,14 +99,8 @@ public class MuleMojo extends AbstractMuleMojo
     protected void createMuleApp(final File app) throws MojoExecutionException, ArchiverException
     {
         final MuleArchiver archiver = new MuleArchiver();
-        final File muleConfig = new File(appDirectory, "mule-config.xml");
-        if (!muleConfig.exists())
-        {
-            final String message = "No muleConfig.xml available at: " + muleConfig;
-            getLog().error(message);
-            throw new MojoExecutionException(message);
-        }
-
+        validateProject();
+        
         archiver.addResources(appDirectory);
 
         if (!this.archiveClasses)
@@ -156,6 +148,21 @@ public class MuleMojo extends AbstractMuleMojo
         catch (IOException e)
         {
             getLog().error("Cannot create archive", e);
+        }
+    }
+
+    private void validateProject() throws MojoExecutionException
+    {
+        File muleConfig = new File(appDirectory, "mule-config.xml");
+        File deploymentDescriptor = new File(appDirectory, "mule-deploy.properties");
+        
+        if ((muleConfig.exists() == false) && (deploymentDescriptor.exists() == false))
+        {
+            String message = String.format("No mule-config.xml or mule-deploy.properties in %1s",
+                this.project.getBasedir());
+            
+            getLog().error(message);
+            throw new MojoExecutionException(message);
         }
     }
 
