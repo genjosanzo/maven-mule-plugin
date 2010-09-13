@@ -20,7 +20,6 @@ import org.codehaus.plexus.util.DirectoryScanner;
  */
 public class MuleArchiver extends ZipArchiver
 {
-
     public final static String LIB_LOCATION = "lib" + File.separator;
     public final static String CLASSES_LOCATION = "classes" + File.separator;
     public final static String ROOT_LOCATION = "";
@@ -51,7 +50,7 @@ public class MuleArchiver extends ZipArchiver
 
     private String[] addDefaultExcludes(String[] excludes)
     {
-        if(excludes==null || excludes.length==0)
+        if ((excludes == null) || (excludes.length == 0))
         {
             return DirectoryScanner.DEFAULTEXCLUDES;
         }
