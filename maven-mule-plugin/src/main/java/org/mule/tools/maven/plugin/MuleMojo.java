@@ -137,7 +137,7 @@ public class MuleMojo extends AbstractMuleMojo
             }
         }
 
-        for (final Artifact artifact : (Set<Artifact>) this.project.getArtifacts())
+        for (final Artifact artifact : getProjectArtifacts())
         {
             if (Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
             {
@@ -159,4 +159,9 @@ public class MuleMojo extends AbstractMuleMojo
         }
     }
 
+    @SuppressWarnings({ "unchecked", "cast" })
+    private Set<Artifact> getProjectArtifacts()
+    {
+        return (Set<Artifact>) this.project.getArtifacts();
+    }
 }
