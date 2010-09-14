@@ -98,35 +98,18 @@ public class MuleMojo extends AbstractMuleMojo
 
     protected void createMuleApp(final File app) throws MojoExecutionException, ArchiverException
     {
-        final MuleArchiver archiver = new MuleArchiver();
         validateProject();
-        
+
+        MuleArchiver archiver = new MuleArchiver();
         archiver.addResources(appDirectory);
 
-        if (!this.archiveClasses)
+        if (this.archiveClasses == false)
         {
-            getLog().info("Copying classes directly");
-            archiver.addClasses(this.classesDirectory, null, null);
+            addClassesFolder(archiver);
         }
         else
         {
-            getLog().info("Copying classes as a jar");
-
-            final JarArchiver jarArchiver = new JarArchiver();
-            jarArchiver.addDirectory(this.classesDirectory, null, null);
-            final File jar = new File(this.outputDirectory, this.finalName + ".jar");
-            jarArchiver.setDestFile(jar);
-            try
-            {
-                jarArchiver.createArchive();
-                archiver.addLib(jar);
-            }
-            catch (IOException e)
-            {
-                final String message = "Cannot create project jar";
-                getLog().error(message, e);
-                throw new MojoExecutionException(message, e);
-            }
+            addArchivedClasses(archiver);
         }
 
         for (final Artifact artifact : getProjectArtifacts())
@@ -148,6 +131,40 @@ public class MuleMojo extends AbstractMuleMojo
         catch (IOException e)
         {
             getLog().error("Cannot create archive", e);
+        }
+    }
+
+    private void addClassesFolder(MuleArchiver archiver) throws ArchiverException
+    {
+        if (this.classesDirectory.exists())
+        {
+            getLog().info("Copying classes directly");
+            archiver.addClasses(this.classesDirectory, null, null);
+        }
+        else
+        {
+            getLog().info("target/classes does not exist, skipping");
+        }
+    }
+
+    private void addArchivedClasses(MuleArchiver archiver) throws ArchiverException, MojoExecutionException
+    {
+        getLog().info("Copying classes as a jar");
+    
+        final JarArchiver jarArchiver = new JarArchiver();
+        jarArchiver.addDirectory(this.classesDirectory, null, null);
+        final File jar = new File(this.outputDirectory, this.finalName + ".jar");
+        jarArchiver.setDestFile(jar);
+        try
+        {
+            jarArchiver.createArchive();
+            archiver.addLib(jar);
+        }
+        catch (IOException e)
+        {
+            final String message = "Cannot create project jar";
+            getLog().error(message, e);
+            throw new MojoExecutionException(message, e);
         }
     }
 
