@@ -10,27 +10,53 @@
 
 package org.mule.tools.maven.plugin;
 
+import java.io.File;
+
 import org.apache.maven.shared.invoker.InvocationResult;
 
 public class ClassesHandlingTestCase extends AbstractMuleMavenPluginTestCase
 {
     public void testPackageWithClassesFolder() throws Exception
     {
-        InvocationResult result = buildProject("project-without-classes");
+        String projectName = "project-with-plain-classes";
+
+        InvocationResult result = buildProject(projectName);
         assertSuccess(result);
+
+        String pathToClasses = String.format("target/it/%1s/target/classes", projectName);
+        File classesFolder = new File(pathToClasses);
+        assertFileExists(classesFolder);
+        assertTrue(classesFolder.isDirectory());
     }
     
-//    public void testPackageWithArchivedClasses()
-//    {
-//    }
-//
-//    public void testPackageWithoutClassesFolder()
-//    {
-//    }
-//
-//    public void testPackageWithEmptyArchive()
-//    {
-//    }
+    public void testPackageWithArchivedClasses() throws Exception
+    {
+        String projectName = "project-with-archived-classes";
+        
+        InvocationResult result = buildProject(projectName);
+        assertSuccess(result);
+        
+        String classesArchive = String.format("target/it/%1s/target/%2s-1.0-SNAPSHOT.jar",
+            projectName, projectName);
+        assertFileExists(new File(classesArchive));
+    }
+
+    public void testPackageWithoutClassesFolder() throws Exception
+    {
+        String projectName = "project-without-classes";
+        
+        InvocationResult result = buildProject(projectName);
+        assertSuccess(result);
+        
+        String classesFolder = String.format("target/it/%1s/target/classes", projectName);
+        assertFileDoesNotExist(new File(classesFolder));
+    }
+
+    public void testPackageWithEmptyArchive() throws Exception
+    {
+        String projectName = "project-without-archived-classes";
+        
+        InvocationResult result = buildProject(projectName);
+        assertFailure(result);
+    }
 }
-
-

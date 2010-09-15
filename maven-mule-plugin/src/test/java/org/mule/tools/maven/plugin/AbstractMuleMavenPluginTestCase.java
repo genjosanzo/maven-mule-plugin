@@ -75,19 +75,24 @@ public class AbstractMuleMavenPluginTestCase extends AbstractMojoTestCase
         return _buildTool.executeMaven(request);
     }
     
-    private void assertFileExists(File file)
+    protected void assertFileExists(File file)
     {
         assertTrue(file.getAbsolutePath() + " must exist", file.exists());
     }
     
+    protected void assertFileDoesNotExist(File file)
+    {
+        assertFalse(file.getAbsolutePath() + " must not exist", file.exists());
+    }
+    
     protected void assertSuccess(InvocationResult result)
     {
-        assertEquals(0, result.getExitCode());
+        assertEquals("Expected exit code 0", 0, result.getExitCode());
     }
 
     protected void assertFailure(InvocationResult result)
     {
-        assertNotSame(0, result.getExitCode());
+        assertNotSame("Expected exit code != 0", 0, result.getExitCode());
     }
 }
 
