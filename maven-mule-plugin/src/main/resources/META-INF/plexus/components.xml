@@ -8,7 +8,6 @@
                 <lifecycles>
                     <lifecycle>
                         <id>default</id>
-                        <!-- START SNIPPET: mule-lifecycle -->
                         <phases>
                             <process-resources>
                                 org.apache.maven.plugins:maven-resources-plugin:resources
@@ -23,7 +22,6 @@
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>
-                        <!-- END SNIPPET: mule-lifecycle -->
                     </lifecycle>
                 </lifecycles>
             </configuration>
