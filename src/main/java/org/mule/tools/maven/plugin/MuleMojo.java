@@ -24,7 +24,7 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 /**
  * Build a Mule application archive.
  *
- * @execute lifecycle="mule-package" phase="package"
+ * @phase package
  * @goal mule
  * @requiresDependencyResolution runtime
  */
