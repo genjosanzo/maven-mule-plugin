@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -70,19 +69,8 @@ public class MuleMojo extends AbstractMuleMojo
      */
     private boolean archiveClasses;
 
-
-    /**
-     * @component
-     */
-    private ArtifactHandlerManager artifactHandlerManager;
-
-
-    /**
-     * @see org.apache.maven.plugin.Mojo#execute()
-     */
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-
         final File app = new File(this.outputDirectory, this.finalName + ".zip");
         try
         {
@@ -112,15 +100,8 @@ public class MuleMojo extends AbstractMuleMojo
             addArchivedClasses(archiver);
         }
 
-        for (final Artifact artifact : getProjectArtifacts())
-        {
-            if (Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
-            {
-                getLog().info("Adding <" + artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getVersion() + "> as a lib");
-                archiver.addLib(artifact.getFile());
-            }
-        }
-
+        addDependencies(archiver);
+        
         archiver.setDestFile(app);
 
         try
@@ -165,6 +146,20 @@ public class MuleMojo extends AbstractMuleMojo
             final String message = "Cannot create project jar";
             getLog().error(message, e);
             throw new MojoExecutionException(message, e);
+        }
+    }
+
+    private void addDependencies(MuleArchiver archiver) throws ArchiverException
+    {
+        for (Artifact artifact : getProjectArtifacts())
+        {
+            if (Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
+            {
+                String message = String.format("Adding <%1s:%2s:%3s> as a lib",
+                    artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
+                getLog().info(message);
+                archiver.addLib(artifact.getFile());
+            }
         }
     }
 
