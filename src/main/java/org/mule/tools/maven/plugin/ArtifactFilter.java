@@ -81,7 +81,6 @@ public class ArtifactFilter
     private boolean dependencyTrailContains(Artifact artifact, String filter)
     {
         List<?> dependencyTrail = artifact.getDependencyTrail();
-System.out.println("***** filter: " + filter + " dep trail: " + artifact.getDependencyTrail());
         for (Object trailElement : dependencyTrail)
         {
             if (trailElement.toString().startsWith(filter))
