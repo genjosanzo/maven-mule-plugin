@@ -55,10 +55,14 @@ public class ArtifactFilter
     
     private Set<Artifact> applyAllExcludes(Set<Artifact> artifacts)
     {
-        for (Exclusion exclude : excludes)
+        if (excludes != null)
         {
-            artifacts = applyExclude(exclude, artifacts);
+            for (Exclusion exclude : excludes)
+            {
+                artifacts = applyExclude(exclude, artifacts);
+            }
         }
+        
         return artifacts;
     }
 
