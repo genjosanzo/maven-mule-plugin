@@ -11,6 +11,7 @@ package org.mule.tools.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -31,6 +32,11 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 public class MuleMojo extends AbstractMuleMojo
 {
     /**
+     * @component
+     */
+    private MavenProjectHelper projectHelper;
+
+    /**
      * The Maven project.
      *
      * @parameter expression="${project}"
@@ -38,11 +44,6 @@ public class MuleMojo extends AbstractMuleMojo
      * @readonly
      */
     private MavenProject project;
-
-    /**
-     * @component
-     */
-    private MavenProjectHelper projectHelper;
 
     /**
      * Directory containing the classes.
@@ -61,17 +62,23 @@ public class MuleMojo extends AbstractMuleMojo
     private File appDirectory;
 
     /**
-     * Whether a JAR file will be created for the classes in the app. Using this optional configuration
-     * parameter will make the generated classes to be archived into a jar file
+     * Whether a JAR file will be created for the classes in the app. Using this optional
+     * configuration parameter will make the generated classes to be archived into a jar file
      * and the classes directory will then be excluded from the app.
      *
      * @parameter expression="${archiveClasses}" default-value="false"
      */
     private boolean archiveClasses;
 
+    /**
+     * @parameter
+     * @since 1.2
+     */
+    private List<Exclusion> exclusions;
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        final File app = new File(this.outputDirectory, this.finalName + ".zip");
+        File app = new File(this.outputDirectory, this.finalName + ".zip");
         try
         {
             createMuleApp(app);
@@ -115,6 +122,21 @@ public class MuleMojo extends AbstractMuleMojo
         }
     }
 
+    private void validateProject() throws MojoExecutionException
+    {
+        File muleConfig = new File(appDirectory, "mule-config.xml");
+        File deploymentDescriptor = new File(appDirectory, "mule-deploy.properties");
+        
+        if ((muleConfig.exists() == false) && (deploymentDescriptor.exists() == false))
+        {
+            String message = String.format("No mule-config.xml or mule-deploy.properties in %1s",
+                this.project.getBasedir());
+            
+            getLog().error(message);
+            throw new MojoExecutionException(message);
+        }
+    }
+
     private void addClassesFolder(MuleArchiver archiver) throws ArchiverException
     {
         if (this.classesDirectory.exists())
@@ -151,36 +173,17 @@ public class MuleMojo extends AbstractMuleMojo
 
     private void addDependencies(MuleArchiver archiver) throws ArchiverException
     {
-        for (Artifact artifact : getProjectArtifacts())
+        for (Artifact artifact : getArtifactsToArchive())
         {
-            if (Artifact.SCOPE_COMPILE.equals(artifact.getScope()) || Artifact.SCOPE_RUNTIME.equals(artifact.getScope()))
-            {
-                String message = String.format("Adding <%1s:%2s:%3s> as a lib",
-                    artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
-                getLog().info(message);
-                archiver.addLib(artifact.getFile());
-            }
+            String message = String.format("Adding <%1s> as a lib", artifact.getId());
+            getLog().info(message);
+
+            archiver.addLib(artifact.getFile());
         }
     }
 
-    private void validateProject() throws MojoExecutionException
+    private Set<Artifact> getArtifactsToArchive()
     {
-        File muleConfig = new File(appDirectory, "mule-config.xml");
-        File deploymentDescriptor = new File(appDirectory, "mule-deploy.properties");
-        
-        if ((muleConfig.exists() == false) && (deploymentDescriptor.exists() == false))
-        {
-            String message = String.format("No mule-config.xml or mule-deploy.properties in %1s",
-                this.project.getBasedir());
-            
-            getLog().error(message);
-            throw new MojoExecutionException(message);
-        }
-    }
-
-    @SuppressWarnings({ "unchecked", "cast" })
-    private Set<Artifact> getProjectArtifacts()
-    {
-        return (Set<Artifact>) this.project.getArtifacts();
+        return new ArtifactFilter(this.project, this.exclusions).getArtifactsToArchive();
     }
 }
