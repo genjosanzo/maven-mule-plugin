@@ -17,7 +17,6 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
@@ -37,29 +36,12 @@ public class MuleMojo extends AbstractMuleMojo
     private MavenProjectHelper projectHelper;
 
     /**
-     * The Maven project.
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    private MavenProject project;
-
-    /**
      * Directory containing the classes.
      *
      * @parameter expression="${project.build.outputDirectory}"
      * @required
      */
     private File classesDirectory;
-
-    /**
-     * Directory containing the app resources.
-     *
-     * @parameter expression="${basedir}/src/main/app"
-     * @required
-     */
-    private File appDirectory;
 
     /**
      * Whether a JAR file will be created for the classes in the app. Using this optional
@@ -71,6 +53,9 @@ public class MuleMojo extends AbstractMuleMojo
     private boolean archiveClasses;
 
     /**
+     * List of exclusion elements (having groupId and artifactId children) to exclude from the
+     * application archive.
+     * 
      * @parameter
      * @since 1.2
      */
