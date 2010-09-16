@@ -12,6 +12,7 @@ package org.mule.tools.maven.plugin;
 import java.io.File;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Base Mule Application Mojo
@@ -33,4 +34,21 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @required
      */
     protected String finalName;
+
+    /**
+     * Directory containing the app resources.
+     *
+     * @parameter expression="${basedir}/src/main/app"
+     * @required
+     */
+    protected File appDirectory;
+    
+    /**
+     * The Maven project.
+     *
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
+     */
+    protected MavenProject project;
 }
