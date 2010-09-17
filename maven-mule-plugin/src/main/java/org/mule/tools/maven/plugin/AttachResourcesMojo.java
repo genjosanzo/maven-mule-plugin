@@ -10,6 +10,7 @@
 
 package org.mule.tools.maven.plugin;
 
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -23,10 +24,11 @@ public class AttachResourcesMojo extends AbstractMuleMojo
     {
         String appFolder = this.appDirectory.getAbsolutePath();
         
-        getLog().info("attaching " + appFolder);
-        
-        this.project.addCompileSourceRoot(appFolder);
+        getLog().info("attaching resource " + appFolder);
+
+        Resource appFolderResource = new Resource();
+        appFolderResource.setDirectory(appFolder);
+
+        this.project.addResource(appFolderResource);
     }
 }
-
-
