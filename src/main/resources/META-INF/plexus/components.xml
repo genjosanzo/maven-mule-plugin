@@ -10,7 +10,7 @@
                         <id>default</id>
                         <phases>
                             <validate>
-                                org.mule.tools:maven-mule-plugin:attach-resources
+                                org.mule.tools:maven-mule-plugin:attach-test-resources
                             </validate>
                             <process-resources>
                                 org.apache.maven.plugins:maven-resources-plugin:resources
