@@ -24,7 +24,7 @@ public class AttachTestResourcesMojo extends AbstractMuleMojo
     {
         String appFolder = this.appDirectory.getAbsolutePath();
         
-        getLog().info("attaching resource " + appFolder);
+        getLog().info("attaching test resource " + appFolder);
 
         Resource appFolderResource = new Resource();
         appFolderResource.setDirectory(appFolder);
