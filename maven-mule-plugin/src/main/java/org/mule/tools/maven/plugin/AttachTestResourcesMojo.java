@@ -16,9 +16,9 @@ import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * @phase validate
- * @goal attach-resources
+ * @goal attach-test-resources
  */
-public class AttachResourcesMojo extends AbstractMuleMojo
+public class AttachTestResourcesMojo extends AbstractMuleMojo
 {
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -29,6 +29,6 @@ public class AttachResourcesMojo extends AbstractMuleMojo
         Resource appFolderResource = new Resource();
         appFolderResource.setDirectory(appFolder);
 
-        this.project.addResource(appFolderResource);
+        this.project.addTestResource(appFolderResource);
     }
 }
