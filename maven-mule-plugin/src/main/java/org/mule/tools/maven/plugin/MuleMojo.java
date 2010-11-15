@@ -60,6 +60,14 @@ public class MuleMojo extends AbstractMuleMojo
      * @since 1.2
      */
     private List<Exclusion> exclusions;
+    
+    /**
+     * Exclude all artifacts with Mule groupIds. Default is <code>true</code>.
+     * 
+     * @parameter default-value="true"
+     * @since 1.4
+     */
+    private boolean excludeMuleDependencies;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -169,6 +177,7 @@ public class MuleMojo extends AbstractMuleMojo
 
     private Set<Artifact> getArtifactsToArchive()
     {
-        return new ArtifactFilter(this.project, this.exclusions).getArtifactsToArchive();
+        ArtifactFilter filter = new ArtifactFilter(this.project, this.exclusions, this.excludeMuleDependencies);
+        return filter.getArtifactsToArchive();
     }
 }

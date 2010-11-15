@@ -10,6 +10,7 @@
 
 package org.mule.tools.maven.plugin;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,20 +20,36 @@ import org.apache.maven.project.MavenProject;
 
 public class ArtifactFilter
 {
+    private static final Set<String> MULE_GROUP_IDS;
+    
     private Set<Artifact> projectArtifacts;
     private List<Exclusion> excludes;
+    private boolean excludeMuleArtifacts;
 
+    static
+    {
+        MULE_GROUP_IDS = new HashSet<String>();
+        MULE_GROUP_IDS.add("org.mule");
+        MULE_GROUP_IDS.add("com.mulesource.muleesb");
+        MULE_GROUP_IDS.add("com.mulesoft.muleesb");
+    }
+    
     @SuppressWarnings("unchecked")
-    public ArtifactFilter(MavenProject project, List<Exclusion> exclusions)
+    public ArtifactFilter(MavenProject project, List<Exclusion> exclusions, boolean excludeMuleDependencies)
     {
         super();
         projectArtifacts = project.getArtifacts();
         excludes = exclusions;
+        excludeMuleArtifacts = excludeMuleDependencies; 
     }
     
     public Set<Artifact> getArtifactsToArchive()
     {
         Set<Artifact> filteredArtifacts = keepOnlyArtifactsWithCompileOrRuntimeScope();
+        if (excludeMuleArtifacts)
+        {
+            filteredArtifacts = keepOnlyArtifactsWithoutMuleGroupId(filteredArtifacts);
+        }
         filteredArtifacts = applyAllExcludes(filteredArtifacts);
         return filteredArtifacts;
     }
@@ -52,7 +69,51 @@ public class ArtifactFilter
         
         return filteredArtifacts;
     }
+
+    private Set<Artifact> keepOnlyArtifactsWithoutMuleGroupId(Set<Artifact> artifacts)
+    {
+        Set<Artifact> filteredArtifacts = new HashSet<Artifact>();
+        
+        for (Artifact artifact : artifacts)
+        {
+            if (isDependencyWithMuleGroupId(artifact) == false)
+            {
+                filteredArtifacts.add(artifact);
+            }
+        }
+        
+        return filteredArtifacts;
+    }
+
+    private boolean isDependencyWithMuleGroupId(Artifact artifact)
+    {
+        List<String> dependencyTrail = getDependencyTrailWithoutProjectArtifact(artifact);        
+        for (String trailElement : dependencyTrail)
+        {
+            for (String groupId : MULE_GROUP_IDS)
+            {
+                if (trailElement.startsWith(groupId))
+                {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
     
+    /**
+     * The first element on dependency tail is the project that is compiled. The project's groupId 
+     * can be anything, we don't filter it.
+     */
+    @SuppressWarnings("all")
+    private List<String> getDependencyTrailWithoutProjectArtifact(Artifact artifact)
+    {
+        List dependencyTrail = new ArrayList(artifact.getDependencyTrail());
+        dependencyTrail.remove(0);
+        return dependencyTrail;
+    }
+
     private Set<Artifact> applyAllExcludes(Set<Artifact> artifacts)
     {
         if (excludes != null)
