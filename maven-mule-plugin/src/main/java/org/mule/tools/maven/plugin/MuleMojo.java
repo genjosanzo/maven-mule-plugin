@@ -55,15 +55,15 @@ public class MuleMojo extends AbstractMuleMojo
     /**
      * List of exclusion elements (having groupId and artifactId children) to exclude from the
      * application archive.
-     * 
+     *
      * @parameter
      * @since 1.2
      */
     private List<Exclusion> exclusions;
-    
+
     /**
      * Exclude all artifacts with Mule groupIds. Default is <code>true</code>.
-     * 
+     *
      * @parameter default-value="true"
      * @since 1.4
      */
@@ -101,7 +101,7 @@ public class MuleMojo extends AbstractMuleMojo
         }
 
         addDependencies(archiver);
-        
+
         archiver.setDestFile(app);
 
         try
@@ -119,12 +119,12 @@ public class MuleMojo extends AbstractMuleMojo
     {
         File muleConfig = new File(appDirectory, "mule-config.xml");
         File deploymentDescriptor = new File(appDirectory, "mule-deploy.properties");
-        
+
         if ((muleConfig.exists() == false) && (deploymentDescriptor.exists() == false))
         {
             String message = String.format("No mule-config.xml or mule-deploy.properties in %1s",
                 this.project.getBasedir());
-            
+
             getLog().error(message);
             throw new MojoExecutionException(message);
         }
@@ -139,14 +139,20 @@ public class MuleMojo extends AbstractMuleMojo
         }
         else
         {
-            getLog().info("target/classes does not exist, skipping");
+            getLog().info(this.classesDirectory + " does not exist, skipping");
         }
     }
 
     private void addArchivedClasses(MuleArchiver archiver) throws ArchiverException, MojoExecutionException
     {
+        if (this.classesDirectory.exists() == false)
+        {
+            getLog().info(this.classesDirectory + " does not exist, skipping");
+            return;
+        }
+
         getLog().info("Copying classes as a jar");
-    
+
         final JarArchiver jarArchiver = new JarArchiver();
         jarArchiver.addDirectory(this.classesDirectory, null, null);
         final File jar = new File(this.outputDirectory, this.finalName + ".jar");

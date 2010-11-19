@@ -9,12 +9,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mule</groupId>    
+            <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
             <version>2.2.1</version>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -23,6 +23,7 @@
                 <version>${version}</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <excludeMuleDependencies>false</excludeMuleDependencies>
                     <exclusions>
                         <exclusion>
                             <groupId>log4j</groupId>

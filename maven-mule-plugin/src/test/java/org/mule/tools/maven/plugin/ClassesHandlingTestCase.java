@@ -28,14 +28,14 @@ public class ClassesHandlingTestCase extends AbstractMuleMavenPluginTestCase
         assertFileExists(classesFolder);
         assertTrue(classesFolder.isDirectory());
     }
-    
+
     public void testPackageWithArchivedClasses() throws Exception
     {
         String projectName = "project-with-archived-classes";
-        
+
         InvocationResult result = buildProject(projectName);
         assertSuccess(result);
-        
+
         String classesArchive = String.format("target/it/%1s/target/%2s-1.0-SNAPSHOT.jar",
             projectName, projectName);
         assertFileExists(new File(classesArchive));
@@ -44,23 +44,19 @@ public class ClassesHandlingTestCase extends AbstractMuleMavenPluginTestCase
     public void testPackageWithoutClassesFolder() throws Exception
     {
         String projectName = "project-without-classes";
-        
+
         InvocationResult result = buildProject(projectName);
         assertSuccess(result);
-        
-        // although we don't have a classes folder, the plugin puts src/main/app as resource
-        // and thus does have a classes folder
+
         String classesFolder = String.format("target/it/%1s/target/classes", projectName);
-        assertTrue(new File(classesFolder).exists());
+        assertFalse(new File(classesFolder).exists());
     }
 
     public void testPackageWithEmptyArchive() throws Exception
     {
         String projectName = "project-without-archived-classes";
-        
-        // an archive will be created, although there are no classes to compile. But the
-        // plugin adds src/main/app to the project resources which gets copied into the
-        // classes folder and packaged up
+
+        // the archive will contain the mule-config.xml at least ...
         InvocationResult result = buildProject(projectName);
         assertSuccess(result);
     }
