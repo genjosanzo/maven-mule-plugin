@@ -20,15 +20,18 @@ import org.apache.maven.shared.invoker.InvocationResult;
 
 public class ExclusionsTestCase extends AbstractMuleMavenPluginTestCase
 {
+    private static final String LOG4J_JAR = "lib/log4j-1.2.14.jar";
+    private static final String MULE_CORE_JAR = "lib/mule-core-2.2.1.jar";
+
     public void testExcludeDirectDependency() throws Exception
     {
         File zipFile = zipFileFromBuildingProject("exclude-direct-dependency");
-                
+
         String muleCoreLib = "lib/mule-core-2.2.1.jar";
         String beanutilsLib = "lib/commons-beanutils-1.7.0-osgi.jar"; // this is a transitive dependency of mule-core
         assertZipDoesNotContain(zipFile, muleCoreLib, beanutilsLib);
     }
-    
+
     /**
      * log4j is a transitive dependency of a dependency that mule-core pulls in. Check that only
      * this dependency is excluded.
@@ -36,11 +39,9 @@ public class ExclusionsTestCase extends AbstractMuleMavenPluginTestCase
     public void testExcludeTransitiveLeaf() throws Exception
     {
         File zipFile = zipFileFromBuildingProject("exclude-transitive-leaf");
-        
-        String log4jLib = "lib/log4j-1.2.14.jar";
-        assertZipDoesNotContain(zipFile, log4jLib);
+        assertZipDoesNotContain(zipFile, LOG4J_JAR);
     }
-    
+
     /**
      * The dependeny tree looks like this:
      * <pre>
@@ -48,28 +49,31 @@ public class ExclusionsTestCase extends AbstractMuleMavenPluginTestCase
      * +- org.mule:mule-core:jar:2.2.1:compile
      * \- log4j:log4j:jar:1.2.14:compile
      * </pre>
-     * 
+     *
      * Make sure that mule-core and log4j are excluded
      */
     public void testExcludeTransitiveDependencyAndChildren() throws Exception
     {
         File zipFile = zipFileFromBuildingProject("exclude-transitive-with-child");
-        
-        String muleCoreLib = "lib/mule-core-2.2.1.jar";
-        String log4jLib = "lib/log4j-1.2.14.jar";
-        assertZipDoesNotContain(zipFile, muleCoreLib, log4jLib);
+        assertZipDoesNotContain(zipFile, MULE_CORE_JAR, LOG4J_JAR);
     }
-    
+
+    public void testAutoExcludeDirectMuleDependency() throws Exception
+    {
+        File zipFile = zipFileFromBuildingProject("auto-exclude-direct-mule-dependency");
+        assertZipDoesNotContain(zipFile, MULE_CORE_JAR);
+    }
+
     private File zipFileFromBuildingProject(String projectName) throws Exception
     {
         InvocationResult result = buildProject(projectName);
         assertSuccess(result);
-        
+
         String appArchivePath = String.format("target/it/%1s/target/%2s-1.0-SNAPSHOT.zip",
             projectName, projectName);
         File appArchiveFile = new File(appArchivePath);
         assertFileExists(appArchiveFile);
-        
+
         return appArchiveFile;
     }
 
@@ -79,12 +83,12 @@ public class ExclusionsTestCase extends AbstractMuleMavenPluginTestCase
         try
         {
             zipFile = new ZipFile(file);
-            
+
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements())
             {
                 ZipEntry entry = entries.nextElement();
-                
+
                 for (String name :filenames)
                 {
                     if (entry.getName().equals(name))
