@@ -129,7 +129,7 @@ public class ArtifactFilter
 
     private Set<Artifact> applyExclude(Exclusion exclude, Set<Artifact> artifacts)
     {
-        String filter = exclude.toString();
+        String filter = exclude.asFilter();
         Set<Artifact> filteredArtifacts = new HashSet<Artifact>();
         
         for (Artifact artifact : artifacts)

@@ -10,39 +10,28 @@
 
 package org.mule.tools.maven.plugin;
 
-public class Exclusion
+public class Exclusion extends org.apache.maven.model.Exclusion
 {
-    private String groupId;
-    private String artifactId;
-    
-    public String getGroupId()
-    {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId)
-    {
-        this.groupId = groupId;
-    }
-
-    public String getArtifactId()
-    {
-        return artifactId;
-    }
-
-    public void setArtifactId(String artifactId)
-    {
-        this.artifactId = artifactId;
-    }
-
     @Override
     public String toString()
     {
         StringBuilder buf = new StringBuilder(128);
-        buf.append(groupId);
+        buf.append("<");
+        buf.append(getClass().getSimpleName());
+        buf.append(" ");
+        buf.append(getGroupId());
         buf.append(":");
-        buf.append(artifactId);
-        
+        buf.append(getArtifactId());
+        buf.append(">");
+        return buf.toString();
+    }
+
+    public String asFilter()
+    {
+        StringBuilder buf = new StringBuilder(128);
+        buf.append(getGroupId());
+        buf.append(":");
+        buf.append(getArtifactId());
         return buf.toString();
     }
 }
