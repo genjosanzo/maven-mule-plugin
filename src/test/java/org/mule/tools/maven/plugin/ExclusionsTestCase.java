@@ -16,7 +16,6 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.maven.shared.invoker.InvocationResult;
 
 public class ExclusionsTestCase extends AbstractMuleMavenPluginTestCase
 {
@@ -62,19 +61,6 @@ public class ExclusionsTestCase extends AbstractMuleMavenPluginTestCase
     {
         File zipFile = zipFileFromBuildingProject("auto-exclude-direct-mule-dependency");
         assertZipDoesNotContain(zipFile, MULE_CORE_JAR);
-    }
-
-    private File zipFileFromBuildingProject(String projectName) throws Exception
-    {
-        InvocationResult result = buildProject(projectName);
-        assertSuccess(result);
-
-        String appArchivePath = String.format("target/it/%1s/target/%2s-1.0-SNAPSHOT.zip",
-            projectName, projectName);
-        File appArchiveFile = new File(appArchivePath);
-        assertFileExists(appArchiveFile);
-
-        return appArchiveFile;
     }
 
     private void assertZipDoesNotContain(File file, String... filenames) throws IOException

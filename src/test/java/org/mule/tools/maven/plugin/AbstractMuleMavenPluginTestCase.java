@@ -33,7 +33,7 @@ public class AbstractMuleMavenPluginTestCase extends AbstractMojoTestCase
         super.setUp();
         _buildTool = (BuildTool) lookup(BuildTool.ROLE, "default");
     }
-    
+
     protected InvocationResult buildProject(String projectName) throws Exception
     {
         createBuildLogFile(projectName);
@@ -41,12 +41,12 @@ public class AbstractMuleMavenPluginTestCase extends AbstractMojoTestCase
         File pomFile = pomInProject(projectName);
         return runMaven(pomFile);
     }
-    
+
     private void createBuildLogFile(String basename)
     {
         File outputDir = new File(BUILD_OUTPUT_DIRECTORY);
         outputDir.mkdirs();
-    
+
         _outputFile = new File(outputDir, basename + ".log");
     }
 
@@ -74,17 +74,30 @@ public class AbstractMuleMavenPluginTestCase extends AbstractMojoTestCase
 
         return _buildTool.executeMaven(request);
     }
-    
+
+    protected File zipFileFromBuildingProject(String projectName) throws Exception
+    {
+        InvocationResult result = buildProject(projectName);
+        assertSuccess(result);
+
+        String appArchivePath = String.format("target/it/%1s/target/%2s-1.0-SNAPSHOT.zip",
+            projectName, projectName);
+        File appArchiveFile = new File(appArchivePath);
+        assertFileExists(appArchiveFile);
+
+        return appArchiveFile;
+    }
+
     protected void assertFileExists(File file)
     {
         assertTrue(file.getAbsolutePath() + " must exist", file.exists());
     }
-    
+
     protected void assertFileDoesNotExist(File file)
     {
         assertFalse(file.getAbsolutePath() + " must not exist", file.exists());
     }
-    
+
     protected void assertSuccess(InvocationResult result)
     {
         assertEquals("Expected exit code 0", 0, result.getExitCode());
