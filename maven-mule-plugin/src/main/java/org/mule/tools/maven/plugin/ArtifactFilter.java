@@ -183,7 +183,6 @@ public class ArtifactFilter
 
         for (Artifact artifact : projectArtifacts)
         {
-System.out.println("+++++++++++++++ trail " + artifact.getDependencyTrail());
             if (dependencyTrailContains(artifact, filter) && (artifact.isOptional() == false))
             {
                 filteredArtifacts.add(artifact);
