@@ -62,6 +62,15 @@ public class MuleMojo extends AbstractMuleMojo
     private List<Exclusion> exclusions;
 
     /**
+     * List of inclusion elements (having groupId and artifactId children) to exclude from the
+     * application archive.
+     *
+     * @parameter
+     * @since 1.5
+     */
+    private List<Inclusion> inclusions;
+
+    /**
      * Exclude all artifacts with Mule groupIds. Default is <code>true</code>.
      *
      * @parameter default-value="true"
@@ -183,7 +192,8 @@ public class MuleMojo extends AbstractMuleMojo
 
     private Set<Artifact> getArtifactsToArchive()
     {
-        ArtifactFilter filter = new ArtifactFilter(this.project, this.exclusions, this.excludeMuleDependencies);
+        ArtifactFilter filter = new ArtifactFilter(this.project, this.inclusions,
+            this.exclusions, this.excludeMuleDependencies);
         return filter.getArtifactsToArchive();
     }
 }

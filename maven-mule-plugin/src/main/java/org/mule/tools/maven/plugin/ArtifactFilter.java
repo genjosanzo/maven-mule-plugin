@@ -11,6 +11,7 @@
 package org.mule.tools.maven.plugin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,9 +22,10 @@ import org.apache.maven.project.MavenProject;
 public class ArtifactFilter
 {
     private static final Set<String> MULE_GROUP_IDS;
-    
+
     private Set<Artifact> projectArtifacts;
     private List<Exclusion> excludes;
+    private List<Inclusion> includes;
     private boolean excludeMuleArtifacts;
 
     static
@@ -33,16 +35,17 @@ public class ArtifactFilter
         MULE_GROUP_IDS.add("com.mulesource.muleesb");
         MULE_GROUP_IDS.add("com.mulesoft.muleesb");
     }
-    
+
     @SuppressWarnings("unchecked")
-    public ArtifactFilter(MavenProject project, List<Exclusion> exclusions, boolean excludeMuleDependencies)
+    public ArtifactFilter(MavenProject project, List<Inclusion> inclusions, List<Exclusion> exclusions, boolean excludeMuleDependencies)
     {
         super();
-        projectArtifacts = project.getArtifacts();
+        projectArtifacts = Collections.unmodifiableSet(project.getArtifacts());
+        includes = inclusions;
         excludes = exclusions;
-        excludeMuleArtifacts = excludeMuleDependencies; 
+        excludeMuleArtifacts = excludeMuleDependencies;
     }
-    
+
     public Set<Artifact> getArtifactsToArchive()
     {
         Set<Artifact> filteredArtifacts = keepOnlyArtifactsWithCompileOrRuntimeScope();
@@ -51,13 +54,14 @@ public class ArtifactFilter
             filteredArtifacts = keepOnlyArtifactsWithoutMuleGroupId(filteredArtifacts);
         }
         filteredArtifacts = applyAllExcludes(filteredArtifacts);
+        filteredArtifacts = applyAllIncludes(filteredArtifacts);
         return filteredArtifacts;
     }
 
     private Set<Artifact> keepOnlyArtifactsWithCompileOrRuntimeScope()
     {
         Set<Artifact> filteredArtifacts = new HashSet<Artifact>();
-        
+
         for (Artifact artifact : projectArtifacts)
         {
             String scope = artifact.getScope();
@@ -66,14 +70,14 @@ public class ArtifactFilter
                 filteredArtifacts.add(artifact);
             }
         }
-        
+
         return filteredArtifacts;
     }
 
     private Set<Artifact> keepOnlyArtifactsWithoutMuleGroupId(Set<Artifact> artifacts)
     {
         Set<Artifact> filteredArtifacts = new HashSet<Artifact>();
-        
+
         for (Artifact artifact : artifacts)
         {
             if (isDependencyWithMuleGroupId(artifact) == false)
@@ -81,13 +85,13 @@ public class ArtifactFilter
                 filteredArtifacts.add(artifact);
             }
         }
-        
+
         return filteredArtifacts;
     }
 
     private boolean isDependencyWithMuleGroupId(Artifact artifact)
     {
-        List<String> dependencyTrail = getDependencyTrailWithoutProjectArtifact(artifact);        
+        List<String> dependencyTrail = getDependencyTrailWithoutProjectArtifact(artifact);
         for (String trailElement : dependencyTrail)
         {
             for (String groupId : MULE_GROUP_IDS)
@@ -101,9 +105,9 @@ public class ArtifactFilter
         }
         return false;
     }
-    
+
     /**
-     * The first element on dependency tail is the project that is compiled. The project's groupId 
+     * The first element on dependency tail is the project that is compiled. The project's groupId
      * can be anything, we don't filter it.
      */
     @SuppressWarnings("all")
@@ -123,7 +127,7 @@ public class ArtifactFilter
                 artifacts = applyExclude(exclude, artifacts);
             }
         }
-        
+
         return artifacts;
     }
 
@@ -131,7 +135,7 @@ public class ArtifactFilter
     {
         String filter = exclude.asFilter();
         Set<Artifact> filteredArtifacts = new HashSet<Artifact>();
-        
+
         for (Artifact artifact : artifacts)
         {
             if (dependencyTrailContains(artifact, filter) == false)
@@ -139,7 +143,7 @@ public class ArtifactFilter
                 filteredArtifacts.add(artifact);
             }
         }
-        
+
         return filteredArtifacts;
     }
 
@@ -153,7 +157,37 @@ public class ArtifactFilter
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    private Set<Artifact> applyAllIncludes(Set<Artifact> filteredArtifacts)
+    {
+        if (includes != null)
+        {
+            for (Inclusion inc : includes)
+            {
+                applyInclude(inc, filteredArtifacts);
+            }
+        }
+
+        return filteredArtifacts;
+    }
+
+    private void applyInclude(Inclusion inclusion, Set<Artifact> filteredArtifacts)
+    {
+        // append a ':' to the filter. This will result in "gid:aid:" which can be safely
+        // matched against the toString representation of an artifact without accidentially
+        // matching an artifact that has a "longer" goupId
+        String filter = inclusion.asFilter() + ":";
+
+        for (Artifact artifact : projectArtifacts)
+        {
+System.out.println("+++++++++++++++ trail " + artifact.getDependencyTrail());
+            if (dependencyTrailContains(artifact, filter) && (artifact.isOptional() == false))
+            {
+                filteredArtifacts.add(artifact);
+            }
+        }
     }
 }
