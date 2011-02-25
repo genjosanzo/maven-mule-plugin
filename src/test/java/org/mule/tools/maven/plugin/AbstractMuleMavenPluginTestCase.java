@@ -11,12 +11,8 @@
 package org.mule.tools.maven.plugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.test.plugin.BuildTool;
 
@@ -24,30 +20,38 @@ public class AbstractMuleMavenPluginTestCase extends AbstractMojoTestCase
 {
     private static final String BUILD_OUTPUT_DIRECTORY = "target/surefire-reports/build-output";
 
-    private BuildTool _buildTool;
-    private File _outputFile;
+    protected ProjectBuilder builder;
 
     @Override
     public void setUp() throws Exception
     {
         super.setUp();
-        _buildTool = (BuildTool) lookup(BuildTool.ROLE, "default");
+
+        BuildTool buildTool = (BuildTool) lookup(BuildTool.ROLE, "default");
+        builder = new ProjectBuilder(buildTool);
+    }
+
+    protected InvocationResult installProject(String projectName) throws Exception
+    {
+        builder.setGoals("compile", "install");
+        return buildProject(projectName);
     }
 
     protected InvocationResult buildProject(String projectName) throws Exception
     {
-        createBuildLogFile(projectName);
+        File outputFile = createBuildLogFile(projectName);
+        builder.setOutputFile(outputFile);
 
         File pomFile = pomInProject(projectName);
-        return runMaven(pomFile);
+        return builder.build(pomFile);
     }
 
-    private void createBuildLogFile(String basename)
+    private File createBuildLogFile(String basename)
     {
         File outputDir = new File(BUILD_OUTPUT_DIRECTORY);
         outputDir.mkdirs();
 
-        _outputFile = new File(outputDir, basename + ".log");
+        return new File(outputDir, basename + ".log");
     }
 
     private File pomInProject(String projectName)
@@ -56,23 +60,6 @@ public class AbstractMuleMavenPluginTestCase extends AbstractMojoTestCase
         File pomFile = new File(projectFolder, "pom.xml");
         assertFileExists(pomFile);
         return pomFile;
-    }
-
-    private InvocationResult runMaven(File pom) throws Exception
-    {
-        Properties properties = new Properties();
-
-        List<String> goals = new ArrayList<String>();
-        goals.add("compile");
-        goals.add("package");
-
-        InvocationRequest request = _buildTool.createBasicInvocationRequest(pom, properties, goals,
-            _outputFile);
-        request.setUpdateSnapshots(false);
-        request.setShowErrors(true);
-        request.setDebug(false);
-
-        return _buildTool.executeMaven(request);
     }
 
     protected File zipFileFromBuildingProject(String projectName) throws Exception

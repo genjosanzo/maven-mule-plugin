@@ -80,7 +80,7 @@ public class MuleMojo extends AbstractMuleMojo
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        File app = new File(this.outputDirectory, this.finalName + ".zip");
+        File app = getMuleZipFile();
         try
         {
             createMuleApp(app);
