@@ -26,7 +26,7 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @required
      */
     protected File outputDirectory;
-    
+
     /**
      * Name of the generated Mule App.
      *
@@ -42,7 +42,7 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @required
      */
     protected File appDirectory;
-    
+
     /**
      * The Maven project.
      *
@@ -51,4 +51,9 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @readonly
      */
     protected MavenProject project;
+
+    protected File getMuleZipFile()
+    {
+        return new File(this.outputDirectory, this.finalName + ".zip");
+    }
 }

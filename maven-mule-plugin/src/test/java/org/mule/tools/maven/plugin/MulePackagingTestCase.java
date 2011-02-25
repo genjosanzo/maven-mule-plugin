@@ -19,7 +19,7 @@ public class MulePackagingTestCase extends AbstractMuleMavenPluginTestCase
         InvocationResult result = buildProject("project-with-mule-config");
         assertSuccess(result);
     }
-    
+
     public void testProjectWithDeploymentDescriptor() throws Exception
     {
         InvocationResult result = buildProject("project-with-deployment-descriptor");
