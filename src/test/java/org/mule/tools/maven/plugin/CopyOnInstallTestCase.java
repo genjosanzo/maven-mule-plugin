@@ -39,7 +39,7 @@ public class CopyOnInstallTestCase extends AbstractMuleMavenPluginTestCase
     public void testMuleHomeSet() throws Exception
     {
         Properties props = new Properties();
-        props.put("MULE_HOME", muleHome.getAbsolutePath());
+        props.put("mule.home", muleHome.getAbsolutePath());
         builder.setProperties(props);
 
         File appsDirectory = createAppsDirectory();
@@ -72,5 +72,3 @@ public class CopyOnInstallTestCase extends AbstractMuleMavenPluginTestCase
         return appsDirectory;
     }
 }
-
-

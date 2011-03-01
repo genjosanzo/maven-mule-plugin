@@ -85,7 +85,7 @@ public class MuleInstallMojo extends AbstractMuleMojo
         {
             // fall back to a system property which is set from the plugin testing framework
             // when invoking the integration tests
-            muleHome = System.getProperty("MULE_HOME");
+            muleHome = System.getProperty("mule.home");
         }
         return muleHome;
     }
