@@ -78,6 +78,12 @@ public class MuleMojo extends AbstractMuleMojo
      */
     private boolean excludeMuleDependencies;
 
+    /**
+     * @parameter default-value="false"
+     * @since 1.7
+     */
+    private boolean filterAppDirectory;
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         File app = getMuleZipFile();
@@ -98,17 +104,8 @@ public class MuleMojo extends AbstractMuleMojo
         validateProject();
 
         MuleArchiver archiver = new MuleArchiver();
-        archiver.addResources(appDirectory);
-
-        if (this.archiveClasses == false)
-        {
-            addClassesFolder(archiver);
-        }
-        else
-        {
-            addArchivedClasses(archiver);
-        }
-
+        addAppDirectory(archiver);
+        addCompiledClasses(archiver);
         addDependencies(archiver);
 
         archiver.setDestFile(app);
@@ -136,6 +133,30 @@ public class MuleMojo extends AbstractMuleMojo
 
             getLog().error(message);
             throw new MojoExecutionException(message);
+        }
+    }
+
+    private void addAppDirectory(MuleArchiver archiver) throws ArchiverException
+    {
+        if (filterAppDirectory)
+        {
+            archiver.addResources(getFilteredAppDirectory());
+        }
+        else
+        {
+            archiver.addResources(appDirectory);
+        }
+    }
+
+    private void addCompiledClasses(MuleArchiver archiver) throws ArchiverException, MojoExecutionException
+    {
+        if (this.archiveClasses == false)
+        {
+            addClassesFolder(archiver);
+        }
+        else
+        {
+            addArchivedClasses(archiver);
         }
     }
 

@@ -56,4 +56,9 @@ public abstract class AbstractMuleMojo extends AbstractMojo
     {
         return new File(this.outputDirectory, this.finalName + ".zip");
     }
+
+    protected File getFilteredAppDirectory()
+    {
+        return new File(outputDirectory, "app");
+    }
 }
