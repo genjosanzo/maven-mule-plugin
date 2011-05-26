@@ -87,3 +87,4 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
 |excludeMuleDependencies|Exclude all artifacts with Mule groupIds|true|1.4|
 |inclusions| List of inclusion elements (having groupId and artifactId children) to include into the application archive. This includes transitive dependencies of the included artifact.||1.5|
 |copyToAppsDirectory|Copy the application zip to `$MULE_HOME/apps` as part of the install lifecycle phase. Either set the MULE_HOME environment variable or specify -Dmule.home when invoking Mule.|false|1.6|
+|filterAppDirectory|Apply Maven resource filtering to all files in the appDirectory.|false|1.7|
