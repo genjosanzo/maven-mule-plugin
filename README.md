@@ -1,6 +1,6 @@
 # Maven Mule Plugin#
 
-The maven-mule-plugin allows packaging a project as a Mule 3 application archive. To enable it, declare the packaging type of your Maven project as **mule** and put the maven-mule-plugin into the list of build plugins.
+The maven-mule-plugin allows packaging a project as a Mule 3 application archive. To enable it, declare the packaging type of your Maven project as **mule** and put the maven-mule-plugin into the list of build plugins. The plugin is available on the Maven central repository so you don't have to add any special repositories to your `pom.xml` to use the plugin.
 
 Example:
 
