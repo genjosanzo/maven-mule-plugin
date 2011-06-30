@@ -78,13 +78,13 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
 
 |Property|Description|Default|Since Version|
 |:-------|:----------|:------|:------------|
-|classesDirectory|Directory containing the classes|${project.build.outputDirectory}|1.0|
-|archiveClasses|Whether a JAR file will be created for the classes in the app. Using this optional configuration parameter will make the generated classes to be archived into a jar file and the classes directory will then be excluded from the app.|false|1.0|
-|outputDirectory|Directory containing the generated Mule App.|${project.build.directory}|1.0|
-|finalName|Name of the generated Mule App.|${project.build.finalName}|1.0|
 |appDirectory|Directory containing the app resources.|${basedir}/src/main/app|1.0|
-|exclusions| List of exclusion elements (having groupId and artifactId children) to exclude from the application archive.||1.2|
-|excludeMuleDependencies|Exclude all artifacts with Mule groupIds|true|1.4|
-|inclusions| List of inclusion elements (having groupId and artifactId children) to include into the application archive. This includes transitive dependencies of the included artifact.||1.5|
+|archiveClasses|Whether a JAR file will be created for the classes in the app. Using this optional configuration parameter will make the generated classes to be archived into a jar file and the classes directory will then be excluded from the app.|false|1.0|
+|classesDirectory|Directory containing the classes|${project.build.outputDirectory}|1.0|
 |copyToAppsDirectory|Copy the application zip to `$MULE_HOME/apps` as part of the install lifecycle phase. Either set the MULE_HOME environment variable or specify -Dmule.home when invoking Mule.|false|1.6|
+|excludeMuleDependencies|Exclude all artifacts with Mule groupIds|true|1.4|
+|exclusions| List of exclusion elements (having groupId and artifactId children) to exclude from the application archive.||1.2|
 |filterAppDirectory|Apply Maven resource filtering to all files in the appDirectory.|false|1.7|
+|finalName|Name of the generated Mule App.|${project.build.finalName}|1.0|
+|inclusions| List of inclusion elements (having groupId and artifactId children) to include into the application archive. This includes transitive dependencies of the included artifact.||1.5|
+|outputDirectory|Directory containing the generated Mule App.|${project.build.directory}|1.0|
