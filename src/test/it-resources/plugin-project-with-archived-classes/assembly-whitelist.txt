@@ -1,0 +1,4 @@
+/plugin.properties
+
+/lib
+/lib/plugin-project-with-archived-classes-1.0-SNAPSHOT.jar
