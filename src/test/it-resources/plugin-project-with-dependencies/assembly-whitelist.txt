@@ -1,0 +1,7 @@
+/classes
+/classes/org
+/classes/org/mule
+/classes/org/mule/Tester.class
+
+/lib
+/lib/junit-4.8.2.jar
