@@ -61,6 +61,72 @@
                 <addedToClasspath>true</addedToClasspath>
             </configuration>
         </component>
+
+
+
+        <component>
+            <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+            <role-hint>mule-plugin</role-hint>
+            <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+            <configuration>
+                <lifecycles>
+                    <lifecycle>
+                        <id>default</id>
+                        <phases>
+                            <validate>
+                                org.mule.tools:maven-mule-plugin:attach-test-resources
+                            </validate>
+                            <process-resources>
+                                org.apache.maven.plugins:maven-resources-plugin:resources,
+                                org.mule.tools:maven-mule-plugin:filter-resources
+                            </process-resources>
+                            <compile>
+                                org.apache.maven.plugins:maven-compiler-plugin:compile
+                            </compile>
+                            <process-test-resources>
+                                org.apache.maven.plugins:maven-resources-plugin:testResources
+                            </process-test-resources>
+                            <test-compile>
+                                org.apache.maven.plugins:maven-compiler-plugin:testCompile
+                            </test-compile>
+                            <test>
+                                org.apache.maven.plugins:maven-surefire-plugin:test
+                            </test>
+                            <package>
+                                org.mule.tools:maven-mule-plugin:mule-plugin
+                            </package>
+                            <install>
+                                org.apache.maven.plugins:maven-install-plugin:install,
+                                org.mule.tools:maven-mule-plugin:install
+                            </install>
+                            <deploy>
+                                org.apache.maven.plugins:maven-deploy-plugin:deploy
+                            </deploy>
+                        </phases>
+                    </lifecycle>
+                </lifecycles>
+            </configuration>
+        </component>
+        <component>
+            <role>org.codehaus.plexus.archiver.Archiver</role>
+            <role-hint>mule-plugin</role-hint>
+            <implementation>org.mule.tools.maven.plugin.MuleArchiver</implementation>
+            <instantiation-strategy>per-lookup</instantiation-strategy>
+        </component>
+
+        <!-- let maven plugins know that a mule project is a java project -->
+        <component>
+            <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+            <role-hint>mule-plugin</role-hint>
+            <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
+            <configuration>
+                <type>mule-plugin</type>
+                <language>java</language>
+                <addedToClasspath>true</addedToClasspath>
+            </configuration>
+        </component>
+
     </components>
+
 </component-set>
 
