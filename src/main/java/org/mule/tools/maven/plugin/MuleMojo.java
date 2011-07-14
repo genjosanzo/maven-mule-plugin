@@ -11,6 +11,7 @@ package org.mule.tools.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -107,6 +108,7 @@ public class MuleMojo extends AbstractMuleMojo
         addAppDirectory(archiver);
         addCompiledClasses(archiver);
         addDependencies(archiver);
+        addPlugins(archiver);
 
         archiver.setDestFile(app);
 
@@ -134,6 +136,27 @@ public class MuleMojo extends AbstractMuleMojo
             getLog().error(message);
             throw new MojoExecutionException(message);
         }
+    }
+
+    private void addPlugins(MuleArchiver archiver) throws ArchiverException
+    {
+        @SuppressWarnings("unchecked")
+        final Set<Artifact> artifacts = project.getArtifacts();
+        Set<Artifact> pluginCandidates = new HashSet<Artifact>();
+        for (Artifact artifact : artifacts)
+        {
+            if ("zip".equals(artifact.getType()))
+            {
+                pluginCandidates.add(artifact);
+            }
+        }
+
+        for (Artifact candidate : pluginCandidates)
+        {
+            getLog().info(String.format("Adding <%s> as a plugin", candidate));
+            archiver.addPlugin(candidate.getFile());
+        }
+
     }
 
     private void addAppDirectory(MuleArchiver archiver) throws ArchiverException

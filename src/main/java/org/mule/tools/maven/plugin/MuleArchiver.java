@@ -22,6 +22,7 @@ public class MuleArchiver extends ZipArchiver
 {
     public final static String LIB_LOCATION = "lib" + File.separator;
     public final static String CLASSES_LOCATION = "classes" + File.separator;
+    public final static String PLUGINS_LOCATION = "plugins" + File.separator;
     public final static String ROOT_LOCATION = "";
 
     public void addResources(final File directoryName) throws ArchiverException
@@ -37,6 +38,11 @@ public class MuleArchiver extends ZipArchiver
     public void addLibs(final File directoryName, final String[] includes, final String[] excludes) throws ArchiverException
     {
         addDirectory(directoryName, LIB_LOCATION, includes, addDefaultExcludes(excludes));
+    }
+
+    public void addPlugin(final File plugin) throws ArchiverException
+    {
+        addFile(plugin, PLUGINS_LOCATION + plugin.getName());
     }
 
     /**
