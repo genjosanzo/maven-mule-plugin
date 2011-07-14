@@ -1,3 +1,5 @@
+/plugin.properties
+
 /classes
 /classes/org
 /classes/org/mule
