@@ -113,7 +113,8 @@ public class ArtifactFilter
     @SuppressWarnings("all")
     private List<String> getDependencyTrailWithoutProjectArtifact(Artifact artifact)
     {
-        List dependencyTrail = new ArrayList(artifact.getDependencyTrail());
+        @SuppressWarnings("unchecked")
+        List<String> dependencyTrail = new ArrayList<String>(artifact.getDependencyTrail());
         dependencyTrail.remove(0);
         return dependencyTrail;
     }
@@ -177,8 +178,8 @@ public class ArtifactFilter
     private void applyInclude(Inclusion inclusion, Set<Artifact> filteredArtifacts)
     {
         // append a ':' to the filter. This will result in "gid:aid:" which can be safely
-        // matched against the toString representation of an artifact without accidentially
-        // matching an artifact that has a "longer" goupId
+        // matched against the toString representation of an artifact without accidentally
+        // matching an artifact that has a "longer" groupId
         String filter = inclusion.asFilter() + ":";
 
         for (Artifact artifact : projectArtifacts)
