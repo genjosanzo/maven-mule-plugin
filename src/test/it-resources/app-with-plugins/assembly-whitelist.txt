@@ -1,0 +1,12 @@
+/mule-config.xml
+
+/classes
+/classes/org
+/classes/org/mule
+/classes/org/mule/Tester.class
+
+/lib
+/lib/junit-4.8.2.jar
+
+/plugins
+/plugins/plugin-project-with-plain-classes.zip
