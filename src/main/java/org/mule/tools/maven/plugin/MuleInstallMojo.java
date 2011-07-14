@@ -39,16 +39,16 @@ public class MuleInstallMojo extends AbstractMuleMojo
     {
         final String packaging = project.getPackaging();
 
-        if (!"mule".equals(packaging))
-        {
-            throw new MojoExecutionException(
-                    String.format("Only 'mule' packaging supports 'copyToAppsDirectory' configuration element, " +
-                                  "current project's packaging is '%s'", packaging)
-            );
-        }
-
         if (copyToAppsDirectory)
         {
+            if (!"mule".equals(packaging))
+            {
+                throw new MojoExecutionException(
+                        String.format("Only 'mule' packaging supports 'copyToAppsDirectory' configuration element, " +
+                                      "current project's packaging is '%s'", packaging)
+                );
+            }
+
             File muleHome = determineMuleHome();
             if (muleHome != null)
             {
