@@ -55,7 +55,7 @@
         <dependency>
             <!--
                 A dependency with type 'zip' is assumed to be a Mule plugin and
-                is automatically packaged in a resulting jar under '/plugins'.
+                is automatically packaged in a resulting zip under '/plugins'.
             -->
             <groupId>org.mule</groupId>
             <artifactId>plugin-project-with-plain-classes</artifactId>

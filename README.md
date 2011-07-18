@@ -1,6 +1,13 @@
 # Maven Mule Plugin#
 
-The maven-mule-plugin allows packaging a project as a Mule 3 application archive. To enable it, declare the packaging type of your Maven project as **mule** and put the maven-mule-plugin into the list of build plugins. The plugin is available on the Maven central repository so you don't have to add any special repositories to your `pom.xml` to use the plugin.
+The maven-mule-plugin provides support for packaging Mule-specific projects:
+
+1. **mule** packaging type - a Mule application zip, including any (optional) Mule plugins packaged as part of the application.
+2. **mule-plugin** packaging type - a Mule plugin zip, to be included in a Mule application (since Mule 3.2.0 & maven-mule-plugin-2.0)
+
+More info on the layout of both available in the official reference documentation at http://www.mulesoft.org/documentation/display/MULE3USER/Application+and+Plugin+Packaging
+
+To enable it, declare the packaging type of your Maven project as either **mule** or **mule-plugin** and put the maven-mule-plugin into the list of build plugins. The plugin is available on the Maven central repository so you don't have to add any special repositories to your `pom.xml` to use the plugin.
 
 Example:
 
@@ -13,7 +20,7 @@ Example:
                 <plugin>
                     <groupId>org.mule.tools</groupId>
                     <artifactId>maven-mule-plugin</artifactId>
-                    <version>1.6</version>
+                    <version>2.0-SNAPSHOT</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>
@@ -42,7 +49,7 @@ Exclusions are specified analogous to Maven's dependency exclusions, i.e. an exc
         <plugin>
             <groupId>org.mule.tools</groupId>
             <artifactId>maven-mule-plugin</artifactId>
-            <version>1.6</version>
+            <version>2.0-SNAPSHOT</version>
             <extensions>true</extensions>
             <configuration>
                 <exclusions>
@@ -62,7 +69,7 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
     <plugin>
         <groupId>org.mule.tools</groupId>
         <artifactId>maven-mule-plugin</artifactId>
-        <version>1.6</version>
+        <version>2.0-SNAPSHOT</version>
         <extensions>true</extensions>
         <configuration>
             <inclusions>
@@ -88,3 +95,34 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
 |finalName|Name of the generated Mule App.|${project.build.finalName}|1.0|
 |inclusions| List of inclusion elements (having groupId and artifactId children) to include into the application archive. This includes transitive dependencies of the included artifact.||1.5|
 |outputDirectory|Directory containing the generated Mule App.|${project.build.directory}|1.0|
+
+
+# **mule-plugin** Packaging Type #
+
+## Version Pre-requisites ##
+* Mule: 3.2.0+
+* maven-mule-plugin: 2.0+
+
+To package a project a Mule plugin, simply change the packaging type in the pom.xml to **mule-plugin**.
+The maven project for a Mule plugin uses the same structure as the Mule application ('mule' packaging type). An optional **plugin.properties** file is picked up from the **src/main/app* dir of the project.
+A Mule plugin zip can be distributed 2 ways:
+
+1. Plugin zip as is, e.g. for consumption by other projects.
+2. Bundled inside the application zip (under the '/plugins' folder).
+
+## Bundling Plugins in Mule Applications ##
+
+In addition to standard dependency graph inclusion, it's possible to bundle a Mule plugin in the application. The project assumes that
+any dependency with a **zip** type is a Mule plugin and included in the '/plugins' folder of the resulting application:
+
+
+    <dependency>
+        <!--
+            A dependency with type 'zip' is assumed to be a Mule plugin and
+            is automatically packaged in a resulting zip under '/plugins'.
+        -->
+        <groupId>org.mule</groupId>
+        <artifactId>plugin-project-with-plain-classes</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <type>zip</type>
+    </dependency>
