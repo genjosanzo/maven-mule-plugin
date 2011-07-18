@@ -97,18 +97,21 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
 |outputDirectory|Directory containing the generated Mule App.|${project.build.directory}|1.0|
 
 
-# **mule-plugin** Packaging Type #
+# 'mule-plugin' Packaging Type #
 
 ## Version Pre-requisites ##
 * Mule: 3.2.0+
 * maven-mule-plugin: 2.0+
 
-To package a project a Mule plugin, simply change the packaging type in the pom.xml to **mule-plugin**.
+## Summary ##
+To package a project as Mule plugin, simply change the packaging type in the pom.xml to **mule-plugin**.
 The maven project for a Mule plugin uses the same structure as the Mule application ('mule' packaging type). An optional **plugin.properties** file is picked up from the **src/main/app* dir of the project.
 A Mule plugin zip can be distributed 2 ways:
 
 1. Plugin zip as is, e.g. for consumption by other projects.
 2. Bundled inside the application zip (under the '/plugins' folder).
+
+More info on Mule application and plugin layout: http://www.mulesoft.org/documentation/display/MULE3USER/Application+and+Plugin+Packaging
 
 ## Bundling Plugins in Mule Applications ##
 
