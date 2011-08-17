@@ -156,6 +156,15 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:git://github.com:mulesoft/maven-mule-plugin.git
+        </connection>
+        <developerConnection>
+            scm:git:git@github.com:mulesoft/maven-mule-plugin.git
+        </developerConnection>
+        <url>http://github.com/mulesoft/maven-mule-plugin</url>
+    </scm>
+
     <distributionManagement>
         <repository>
             <id>mule-releases</id>
