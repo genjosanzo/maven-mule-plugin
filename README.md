@@ -13,7 +13,7 @@ Example:
                 <plugin>
                     <groupId>org.mule.tools</groupId>
                     <artifactId>maven-mule-plugin</artifactId>
-                    <version>1.6</version>
+                    <version>1.7</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>
@@ -42,7 +42,7 @@ Exclusions are specified analogous to Maven's dependency exclusions, i.e. an exc
         <plugin>
             <groupId>org.mule.tools</groupId>
             <artifactId>maven-mule-plugin</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
             <extensions>true</extensions>
             <configuration>
                 <exclusions>
@@ -62,7 +62,7 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
     <plugin>
         <groupId>org.mule.tools</groupId>
         <artifactId>maven-mule-plugin</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
         <extensions>true</extensions>
         <configuration>
             <inclusions>
