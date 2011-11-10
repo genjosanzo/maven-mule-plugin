@@ -84,7 +84,7 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
 |copyToAppsDirectory|Copy the application zip to `$MULE_HOME/apps` as part of the install lifecycle phase. Either set the MULE_HOME environment variable or specify -Dmule.home when invoking Mule.|false|1.6|
 |excludeMuleDependencies|Exclude all artifacts with Mule groupIds|true|1.4|
 |exclusions| List of exclusion elements (having groupId and artifactId children) to exclude from the application archive.||1.2|
-|filterAppDirectory|Apply Maven resource filtering to all files in the appDirectory.|false|1.7|
+|filterAppDirectory|Apply Maven resource filtering to all files in the appDirectory. Note that this is not the same as adding the `appDirectory` to the project's resources: all resources of a project are included into the jar that's built inside the Mule application. This option enables Maven's resource filtering for files that reside inside the `appDirectory` but does not add them to the jar.|false|1.7|
 |finalName|Name of the generated Mule App.|${project.build.finalName}|1.0|
 |inclusions| List of inclusion elements (having groupId and artifactId children) to include into the application archive. This includes transitive dependencies of the included artifact.||1.5|
 |outputDirectory|Directory containing the generated Mule App.|${project.build.directory}|1.0|
