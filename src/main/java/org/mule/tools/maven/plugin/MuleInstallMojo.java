@@ -34,7 +34,7 @@ public class MuleInstallMojo extends AbstractMuleMojo
      * @required
      */
     protected boolean copyToAppsDirectory;
-
+    
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         if (copyToAppsDirectory)

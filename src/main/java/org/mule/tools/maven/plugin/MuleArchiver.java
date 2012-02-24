@@ -31,9 +31,13 @@ public class MuleArchiver extends ZipArchiver
 
     public void addLib(final File file) throws ArchiverException
     {
-        addFile(file, LIB_LOCATION + file.getName());
+        addLib(file,file.getName());
     }
-
+    public void addLib(final File file,final String fileName) throws ArchiverException
+    {
+        addFile(file, LIB_LOCATION +fileName);
+    }
+    
     public void addLibs(final File directoryName, final String[] includes, final String[] excludes) throws ArchiverException
     {
         addDirectory(directoryName, LIB_LOCATION, includes, addDefaultExcludes(excludes));
