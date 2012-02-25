@@ -84,6 +84,12 @@ public class MuleMojo extends AbstractMuleMojo
      */
     private boolean filterAppDirectory;
 
+    /**
+     * @parameter default-value="false"
+     * @since 1.8
+     */
+    private boolean prependGroupId;
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         File app = getMuleZipFile();
@@ -103,7 +109,7 @@ public class MuleMojo extends AbstractMuleMojo
     {
         validateProject();
 
-        MuleArchiver archiver = new MuleArchiver();
+        MuleArchiver archiver = new MuleArchiver(prependGroupId);
         addAppDirectory(archiver);
         addCompiledClasses(archiver);
         addDependencies(archiver);
@@ -207,7 +213,7 @@ public class MuleMojo extends AbstractMuleMojo
             String message = String.format("Adding <%1s> as a lib", artifact.getId());
             getLog().info(message);
 
-            archiver.addLib(artifact.getFile());
+            archiver.addLibraryArtifact(artifact);
         }
     }
 

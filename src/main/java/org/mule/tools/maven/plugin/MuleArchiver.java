@@ -11,6 +11,7 @@ package org.mule.tools.maven.plugin;
 
 import java.io.File;
 
+import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -24,6 +25,14 @@ public class MuleArchiver extends ZipArchiver
     public final static String CLASSES_LOCATION = "classes" + File.separator;
     public final static String ROOT_LOCATION = "";
 
+    private boolean prependGroupId;
+
+    public MuleArchiver(boolean prependGroupId)
+    {
+        super();
+        this.prependGroupId = prependGroupId;
+    }
+
     public void addResources(final File directoryName) throws ArchiverException
     {
         addDirectory(directoryName, ROOT_LOCATION, null, addDefaultExcludes(null));
@@ -32,6 +41,24 @@ public class MuleArchiver extends ZipArchiver
     public void addLib(final File file) throws ArchiverException
     {
         addFile(file, LIB_LOCATION + file.getName());
+    }
+
+    public void addLibraryArtifact(final Artifact artifact) throws ArchiverException
+    {
+        String filename = filenameInArchive(artifact);
+        addFile(artifact.getFile(), filename);
+    }
+
+    private String filenameInArchive(Artifact artifact)
+    {
+        StringBuilder buf = new StringBuilder(LIB_LOCATION);
+        if (prependGroupId)
+        {
+            buf.append(artifact.getGroupId());
+            buf.append(".");
+        }
+        buf.append(artifact.getFile().getName());
+        return buf.toString();
     }
 
     public void addLibs(final File directoryName, final String[] includes, final String[] excludes) throws ArchiverException

@@ -10,6 +10,8 @@
 
 package org.mule.tools.maven.plugin;
 
+import java.io.File;
+
 import org.apache.maven.shared.invoker.InvocationResult;
 
 public class MulePackagingTestCase extends AbstractMuleMavenPluginTestCase
@@ -30,5 +32,12 @@ public class MulePackagingTestCase extends AbstractMuleMavenPluginTestCase
     {
         InvocationResult result = buildProject("project-without-config-or-deployment-descriptor");
         assertFailure(result);
+    }
+
+    public void testDependenciesWithSameArtifactIdButDifferentGroupId() throws Exception
+    {
+        File appZip = zipFileFromBuildingProject("dependencies-with-same-artifact-id");
+        assertZipContains(appZip, "lib/log4j.log4j-1.2.15.jar");
+        assertZipContains(appZip, "lib/org.mod4j.org.eclipse.xtext.log4j-1.2.15.jar");
     }
 }

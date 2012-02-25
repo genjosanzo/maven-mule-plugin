@@ -11,12 +11,6 @@
 package org.mule.tools.maven.plugin;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 public class InclusionsTestCase extends AbstractMuleMavenPluginTestCase
 {
@@ -45,42 +39,5 @@ public class InclusionsTestCase extends AbstractMuleMavenPluginTestCase
     {
         File zipFile = zipFileFromBuildingProject("include-transitive-dependency");
         assertZipContains(zipFile, SPRING_CONFIG_JAR);
-    }
-
-    private void assertZipContains(File file, String... filenames) throws IOException
-    {
-        List<String> filesInZip = listZip(file);
-
-        for (String filename : filenames)
-        {
-            assertTrue("Zip file does not contain " + filename, filesInZip.contains(filename));
-        }
-    }
-
-    private List<String> listZip(File file) throws IOException
-    {
-        List<String> filenames = new ArrayList<String>();
-
-        ZipFile zipFile = null;
-        try
-        {
-            zipFile = new ZipFile(file);
-
-            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-            while (entries.hasMoreElements())
-            {
-                ZipEntry entry = entries.nextElement();
-                filenames.add(entry.getName());
-            }
-        }
-        finally
-        {
-            if (zipFile != null)
-            {
-                zipFile.close();
-            }
-        }
-
-        return filenames;
     }
 }
