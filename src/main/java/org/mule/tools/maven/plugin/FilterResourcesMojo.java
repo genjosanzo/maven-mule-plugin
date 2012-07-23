@@ -11,6 +11,7 @@
 package org.mule.tools.maven.plugin;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.execution.MavenSession;
@@ -74,6 +75,12 @@ public class FilterResourcesMojo extends AbstractMuleMojo
      */
     private List<?> nonFilteredFileExtensions;
 
+    /**
+     * @parameter default-value="${project.build.filters}"
+     * @readonly
+     */
+    private List<?> filters;
+    
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         if (filterAppDirectory == false)
@@ -90,7 +97,7 @@ public class FilterResourcesMojo extends AbstractMuleMojo
         try
         {
             MavenResourcesExecution execution = new MavenResourcesExecution(getResources(),
-                getFilteredAppDirectory(), project, encoding, null, null, session);
+                getFilteredAppDirectory(), project, encoding, filters, Collections.EMPTY_LIST, session);
             execution.setEscapeWindowsPaths(escapeWindowsPaths);
             execution.setSupportMultiLineFiltering(supportMultiLineFiltering);
             if (nonFilteredFileExtensions != null)
