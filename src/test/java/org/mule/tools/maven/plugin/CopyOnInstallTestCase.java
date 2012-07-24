@@ -25,6 +25,10 @@ public class CopyOnInstallTestCase extends AbstractMuleMavenPluginTestCase
     public void setUp() throws Exception
     {
         super.setUp();
+        
+        assertNull("the MULE_HOME environment variable may not be set when running the tests",
+            System.getenv("MULE_HOME"));
+        
         tempFolder.create();
         muleHome = tempFolder.newFolder("MULE_HOME");
     }
