@@ -112,6 +112,7 @@ public class MuleMojo extends AbstractMuleMojo
 
         MuleArchiver archiver = new MuleArchiver();
         addAppDirectory(archiver);
+        addMappingsDirectory(archiver);
         addCompiledClasses(archiver);
         addDependencies(archiver);
 
@@ -128,7 +129,9 @@ public class MuleMojo extends AbstractMuleMojo
         }
     }
 
-    private void validateProject() throws MojoExecutionException
+    
+
+	private void validateProject() throws MojoExecutionException
     {
         File muleConfig = new File(appDirectory, "mule-config.xml");
         File deploymentDescriptor = new File(appDirectory, "mule-deploy.properties");
@@ -142,6 +145,13 @@ public class MuleMojo extends AbstractMuleMojo
             throw new MojoExecutionException(message);
         }
     }
+	
+	private void addMappingsDirectory(MuleArchiver archiver) throws ArchiverException {
+    	if (mappingsDirectory.exists() && mappingsDirectory.list().length > 0)
+        {
+            archiver.addResources(mappingsDirectory);
+        }
+	}
 
     private void addAppDirectory(MuleArchiver archiver) throws ArchiverException
     {

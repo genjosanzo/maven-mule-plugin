@@ -42,6 +42,14 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @required
      */
     protected File appDirectory;
+    /**
+     * Directory containing the mappings resources.
+     *
+     * @parameter expression="${basedir}/mappings"
+     * @required
+     */
+    protected File mappingsDirectory;
+    
 
     /**
      * The Maven project.
