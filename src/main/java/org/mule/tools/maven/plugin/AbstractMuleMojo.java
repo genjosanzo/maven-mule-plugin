@@ -46,7 +46,7 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * Directory containing the mappings resources.
      *
      * @parameter expression="${basedir}/mappings"
-     * @required
+     * @optinal
      */
     protected File mappingsDirectory;
     

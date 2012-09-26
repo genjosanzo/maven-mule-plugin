@@ -83,13 +83,12 @@ public class MuleMojo extends AbstractMuleMojo
      * @since 1.7
      */
     private boolean filterAppDirectory;
-    
+
     /**
      * @parameter default-value="false"
      * @since 1.8
      */
     private boolean prependGroupId;
-    
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -110,9 +109,8 @@ public class MuleMojo extends AbstractMuleMojo
     {
         validateProject();
 
-        MuleArchiver archiver = new MuleArchiver();
+        MuleArchiver archiver = new MuleArchiver(prependGroupId);
         addAppDirectory(archiver);
-        addMappingsDirectory(archiver);
         addCompiledClasses(archiver);
         addDependencies(archiver);
 
@@ -129,9 +127,7 @@ public class MuleMojo extends AbstractMuleMojo
         }
     }
 
-    
-
-	private void validateProject() throws MojoExecutionException
+    private void validateProject() throws MojoExecutionException
     {
         File muleConfig = new File(appDirectory, "mule-config.xml");
         File deploymentDescriptor = new File(appDirectory, "mule-deploy.properties");
@@ -145,13 +141,6 @@ public class MuleMojo extends AbstractMuleMojo
             throw new MojoExecutionException(message);
         }
     }
-	
-	private void addMappingsDirectory(MuleArchiver archiver) throws ArchiverException {
-    	if (mappingsDirectory.exists() && mappingsDirectory.list().length > 0)
-        {
-            archiver.addResources(mappingsDirectory);
-        }
-	}
 
     private void addAppDirectory(MuleArchiver archiver) throws ArchiverException
     {
@@ -223,14 +212,8 @@ public class MuleMojo extends AbstractMuleMojo
         {
             String message = String.format("Adding <%1s> as a lib", artifact.getId());
             getLog().info(message);
-            File file = artifact.getFile();
-            if(prependGroupId){
-            	archiver.addLib(file,artifact.getGroupId()+"."+file.getName());
-            }
-            else {
-            	archiver.addLib(file);
-            }
-            
+
+            archiver.addLibraryArtifact(artifact);
         }
     }
 

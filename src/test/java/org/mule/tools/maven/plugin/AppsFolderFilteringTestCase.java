@@ -41,6 +41,14 @@ public class AppsFolderFilteringTestCase extends AbstractMuleMavenPluginTestCase
         assertFalse(muleConfig.contains("${thePort}"));
         assertTrue(muleConfig.contains("http://localhost:8888/"));
     }
+    
+    public void testFilteringWithExplicitFilterElementInPom() throws Exception
+    {
+        File appZip = zipFileFromBuildingProject("filtering-explicit-filter-element");
+        String muleConfig = contentsOfMuleConfigFromZipFile(appZip);
+        assertFalse(muleConfig.contains("${thePort}"));
+        assertTrue(muleConfig.contains("http://localhost:8888/"));
+    }
 
     private String contentsOfMuleConfigFromZipFile(File muleAppZipFile) throws Exception
     {
