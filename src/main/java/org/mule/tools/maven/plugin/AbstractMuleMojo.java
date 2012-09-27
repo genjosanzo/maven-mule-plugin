@@ -42,6 +42,7 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @required
      */
     protected File appDirectory;
+
     /**
      * Directory containing the mappings resources.
      *
@@ -49,7 +50,6 @@ public abstract class AbstractMuleMojo extends AbstractMojo
      * @optinal
      */
     protected File mappingsDirectory;
-    
 
     /**
      * The Maven project.

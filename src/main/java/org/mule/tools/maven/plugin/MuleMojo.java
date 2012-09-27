@@ -113,7 +113,7 @@ public class MuleMojo extends AbstractMuleMojo
         addAppDirectory(archiver);
         addCompiledClasses(archiver);
         addDependencies(archiver);
-        addMappingsFolder(archiver);
+        addMappingsDirectory(archiver);
         archiver.setDestFile(app);
 
         try
@@ -178,11 +178,12 @@ public class MuleMojo extends AbstractMuleMojo
             getLog().info(this.classesDirectory + " does not exist, skipping");
         }
     }
-    private void addMappingsFolder(MuleArchiver archiver) throws ArchiverException
+
+    private void addMappingsDirectory(MuleArchiver archiver) throws ArchiverException
     {
         if (this.mappingsDirectory.exists())
         {
-            getLog().info("Copying mappings directly");
+            getLog().info("Copying mappings");
             archiver.addResources(this.mappingsDirectory);
         }
         else
