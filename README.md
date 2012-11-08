@@ -87,5 +87,6 @@ Inclusion elements mimic the exclusion elements, i.e. an inclusion element has a
 |filterAppDirectory|Apply Maven resource filtering to all files in the appDirectory. Note that this is not the same as adding the `appDirectory` to the project's resources: all resources of a project are included into the jar that's built inside the Mule application. This option enables Maven's resource filtering for files that reside inside the `appDirectory` but does not add them to the jar.|false|1.7|
 |finalName|Name of the generated Mule App.|${project.build.finalName}|1.0|
 |inclusions| List of inclusion elements (having groupId and artifactId children) to include into the application archive. This includes transitive dependencies of the included artifact.||1.5|
+|mappingsDirectory|Directory containing the Mule data mapper .grf files|${basedir}/mappings|1.9|
 |outputDirectory|Directory containing the generated Mule App.|${project.build.directory}|1.0|
 |prependGroupId|When copying dependencies to the Mule App, include the dependency's groupId as part of the filename. Use this flag if you have dependencies with the same artifactId but with different groupId.|false|1.8|
