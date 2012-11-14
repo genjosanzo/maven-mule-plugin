@@ -102,6 +102,7 @@ public class MuleMojo extends AbstractMuleMojo
             throw new MojoExecutionException("Exception creating the Mule App", e);
         }
 
+        this.project.setFile(app);
         this.projectHelper.attachArtifact(this.project, "zip", app);
     }
 
