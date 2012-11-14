@@ -17,7 +17,7 @@ public class AssemblyIncludingMuleAppTestCase extends AbstractMuleMavenPluginTes
     public void testAssemblyIncludingMuleApp() throws Exception
     {
         String projectName = "assembly-with-mule-app";
-        InvocationResult result = buildProject(projectName);
+        InvocationResult result = installProject(projectName);
         assertSuccess(result);
     }
 }
